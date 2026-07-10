@@ -1,5 +1,9 @@
+import os
+from dotenv import load_dotenv  # <-- Naya import
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import mysql.connector
+
+load_dotenv()  # <-- .env file se password load karne ke liye
 
 app = Flask(__name__)
 app.secret_key = 'your_super_secret_key'
@@ -9,7 +13,8 @@ def get_db_connection():
     return mysql.connector.connect(
         host='localhost',
         user='root',
-        password='passWord@11', 
+        
+        password=os.getenv('DB_PASSWORD', 'passWord@11'), 
         database='task_manager_db'
     )
 
