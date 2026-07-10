@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f8f9fa; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        .logout-btn { background: #dc3545; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; }
+        .task-form { margin: 20px 0; }
+        .task-form input[type="text"] { padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+        .task-form button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f1f1f1; }
+        select { padding: 5px; border-radius: 4px; }
+        .status-Pending { color: #ffc107; font-weight: bold; }
+        .status-Completed { color: #28a745; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>Task Management Dashboard</h2>
+    <a href="/logout" class="logout-btn">Logout</a>
+</div>
+
+<div class="task-form">
+    <form action="/add_task" method="POST">
+        <input type="text" name="title" placeholder="Enter new task title..." required>
+        <button type="submit">Add Task</button>
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Task Title</th>
+            <th>Status</th>
+            <th>Action (Change Status)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.title }}</td>
+            <td>
+                <span class="status-{{ task.status }}">{{ task.status }}</span>
+            </td>
+            <td>
+                <form action="/update_task/{{ task.id }}" method="POST" class="status-form">
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="Pending" {% if task.status == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Completed" {% if task.status == 'Completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3" style="text-align: center;">No tasks available. Add some above!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
